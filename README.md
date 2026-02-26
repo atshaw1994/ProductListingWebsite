@@ -1,7 +1,7 @@
 # 🚀 Project: Product Catalog (ASP.NET Core MVC)
 
 ### 🛤️ The Rails-to-ASP.NET Transition
-This project served as a Rosetta Stone for applying **Ruby on Rails** concepts to the **.NET 8.0** framework. By leveraging existing knowledge of MVC architecture, I successfully mapped Rails conventions to their ASP.NET equivalents:
+This project served as a Rosetta Stone for applying **Ruby on Rails** concepts to the **.NET 10.0** framework. By leveraging existing knowledge of MVC architecture, I successfully mapped Rails conventions to their ASP.NET equivalents:
 
 | Feature | Ruby on Rails | ASP.NET Core MVC |
 | :--- | :--- | :--- |
@@ -37,7 +37,7 @@ This project served as a Rosetta Stone for applying **Ruby on Rails** concepts t
 
 ### 🛠️ Tech Stack
 * **Language:** C#
-* **Framework:** ASP.NET Core 8.0 (MVC)
+* **Framework:** ASP.NET Core 10.0 (MVC)
 * **ORM:** Entity Framework Core
 * **Database:** LocalDB / SQL Server
 * **Frontend:** Razor Pages, HTML5, Bootstrap 5
