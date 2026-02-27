@@ -74,17 +74,18 @@ public class CartController : Controller
         });
     }
 
+    [HttpPost]
     public IActionResult Remove(int id)
     {
-        var cart = HttpContext.Session.GetJson<List<CartItem>>("Cart") ?? [];
-
-        var item = cart.FirstOrDefault(x => x.ProductId == id);
-        if (item != null)
-        {
-            cart.Remove(item);
-        }
-
+        List<CartItem> cart = HttpContext.Session.GetJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+        cart.RemoveAll(x => x.ProductId == id);
         HttpContext.Session.SetJson("Cart", cart);
-        return RedirectToAction(nameof(Index));
+
+        return Json(new
+        {
+            success = true,
+            itemCount = cart.Sum(x => x.Quantity),
+            cartTotal = cart.Sum(x => x.Total).ToString("C")
+        });
     }
 }

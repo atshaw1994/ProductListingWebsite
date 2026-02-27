@@ -138,15 +138,25 @@
                         <ul class="list-group list-group-flush">
                             @foreach (var item in cart)
                             {
-                                <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-3" id="mini-row-@item.ProductId">
                                     <div class="d-flex align-items-center gap-3">
                                         <img src="@item.ImageUrl" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
                                         <div>
-                                            <div class="fw-bold text-truncate" style="max-width: 150px;">@item.ProductName</div>
-                                            <small class="text-muted">@item.Quantity x @item.Price.ToString("C")</small>
+                                            <div class="fw-bold text-truncate" style="max-width: 120px;">@item.ProductName</div>
+                                            <div class="d-flex align-items-center gap-2 mt-1">
+                                                <button class="btn btn-xs btn-outline-secondary lh-1 p-1" onclick="changeQty(@item.ProductId, -1)">
+                                                    <span class="material-symbols-rounded" style="font-size: 14px;">remove</span>
+                                                </button>
+                                                <small class="fw-bold"><span id="mini-qty-@item.ProductId">@item.Quantity</span></small>
+                                                <button class="btn btn-xs btn-outline-secondary lh-1 p-1" onclick="changeQty(@item.ProductId, 1)">
+                                                    <span class="material-symbols-rounded" style="font-size: 14px;">add</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <span class="fw-bold text-primary">@item.Total.ToString("C")</span>
+                                    <div class="text-end">
+                                        <span class="fw-bold text-primary d-block" id="mini-total-@item.ProductId">@item.Total.ToString("C")</span>
+                                    </div>
                                 </li>
                             }
                         </ul>

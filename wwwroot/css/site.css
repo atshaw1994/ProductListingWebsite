@@ -73,3 +73,56 @@ body {
 #cartModal.fade.show .modal-dialog {
     right: 0;
 }
+
+.btn-xs {
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1;
+    border-radius: 3px;
+}
+
+#mini-cart-items .list-group-item {
+    transition: background-color 0.2s ease;
+}
+
+#mini-cart-items .list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+#update-cart-btn {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#update-cart-btn:not(.d-none) {
+    display: inline-flex !important;
+    align-items: center;
+    animation: slideUpPulse 0.4s ease-out;
+}
+
+@keyframes slideUpPulse {
+    0% {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+
+    70% {
+        transform: translateY(-2px);
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

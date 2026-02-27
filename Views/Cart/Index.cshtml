@@ -53,12 +53,21 @@
                                     <td>@item.Price.ToString("C")</td>
                                     <td class="text-end fw-bold" id="total-@item.ProductId">@item.Total.ToString("C")</td>
                                     <td class="text-end">
-                                        <a asp-action="Remove" asp-route-id="@item.ProductId" class="text-danger"><span class="material-symbols-rounded">delete</span></a>
+                                        <button type="button"
+                                                class="btn btn-link text-danger p-0 border-0"
+                                                onclick="removeItem(@item.ProductId)">
+                                            <span class="material-symbols-rounded">delete</span>
+                                        </button>
                                     </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end align-items-center p-3 bg-light border-top">
+                        <div>
+                            <button id="update-cart-btn" class="d-none" onclick="location.reload()"/>
+                        </div>
+                    </div>
                 </div>
             </div>
 
