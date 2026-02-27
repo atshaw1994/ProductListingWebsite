@@ -20,6 +20,8 @@ namespace ProductListingWebsite.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index() => View(await _context.Products.ToListAsync());
 
+        public async Task<IActionResult> Storefront() => View(await _context.Products.ToListAsync());
+
         // GET: Products/Details/[x]
         public async Task<IActionResult> Details(int? id)
         {

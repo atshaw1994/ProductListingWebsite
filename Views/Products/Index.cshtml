@@ -4,48 +4,57 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="mb-0">Store Products</h1>
-    <button type="button" class="btn btn-success d-flex align-items-center justify-content-center"
-            data-bs-toggle="modal" data-bs-target="#createProductModal"
-            style="height: 42px;" title="Add New Product">
-        <span class="material-symbols-rounded">add_circle</span>
-    </button>
 </div>
 
-<table class="table">
+<table class="table table-hover">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.Name)</th>
+            <th>@Html.DisplayNameFor(model => model.Price)</th>
+            <th class="text-center">Has Image?</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model) {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    <td>
-                        <img src="@item.ImageUrl" alt="@item.Name" style="width:100px;" />
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="align-middle">@Html.DisplayFor(modelItem => item.Name)</td>
+                <td class="align-middle">@Html.DisplayFor(modelItem => item.Price)</td>
+                <td class="align-middle text-center">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <span class="material-symbols-rounded text-success">check_circle</span>
+                    }
+                    else
+                    {
+                        <span class="material-symbols-rounded text-danger">cancel</span>
+                    }
+                </td>
+                <td class="align-middle">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none text-dark"><span class="material-symbols-rounded">edit</span></a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none text-dark mx-2"><span class="material-symbols-rounded">info</span></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="text-decoration-none text-dark"><span class="material-symbols-rounded">delete</span></a>
+                </td>
+            </tr>
         }
     </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4" class="p-0">
+                <button type="button"
+                        class="btn btn-light w-100 py-3 d-flex align-items-center justify-content-center border-top-0"
+                        data-bs-toggle="modal"
+                        data-bs-target="#createProductModal"
+                        style="border-radius: 0 0 8px 8px; transition: 0.2s;"
+                        onmouseover="this.style.backgroundColor='#e9ecef'"
+                        onmouseout="this.style.backgroundColor='#f8f9fa'">
+                    <span class="material-symbols-rounded me-2">add_circle</span>
+                    <strong>Add New Product</strong>
+                </button>
+            </td>
+        </tr>
+    </tfoot>
 </table>
 
 <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel" aria-hidden="true">
