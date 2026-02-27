@@ -29,3 +29,47 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* Prevent the dropdown from closing when clicking inside it (optional) */
+.dropdown-menu#cartDropdownMenu {
+    min-width: 280px;
+}
+
+/* Custom scrollbar for the mini-cart items */
+#mini-cart-items::-webkit-scrollbar {
+    width: 5px;
+}
+
+#mini-cart-items::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+/* Styling the modal to appear on the right side */
+#cartModal .modal-dialog {
+    position: fixed;
+    margin: auto;
+    width: 350px;
+    height: 100%;
+    right: 0;
+    top: 0;
+    -webkit-transform: translate3d(0%, 0, 0);
+    -ms-transform: translate3d(0%, 0, 0);
+    -o-transform: translate3d(0%, 0, 0);
+    transform: translate3d(0%, 0, 0);
+}
+
+#cartModal .modal-content {
+    height: 100%;
+    border-radius: 0;
+}
+
+/* Animation for sliding in from the right */
+#cartModal.fade .modal-dialog {
+    right: -350px;
+    transition: opacity 0.3s linear, right 0.3s ease-out;
+}
+
+#cartModal.fade.show .modal-dialog {
+    right: 0;
+}

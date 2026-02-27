@@ -1,4 +1,8 @@
 ﻿@using ProductListingWebsite.Helpers
+@{
+    var cart = Context.Session.GetJson<List<CartItem>>("Cart");
+    var count = cart?.Sum(x => x.Quantity) ?? 0;
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,52 +17,51 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-left: 1rem">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">ProductListingWebsite</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">ProductListingWebsite</a>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Products" asp-action="Storefront">Shop</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="About">About</a>
-                    </li>
-                </ul>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" asp-controller="Cart" asp-action="Index">
-                            <span class="material-symbols-rounded me-1">shopping_cart</span>
-                            @{
-                                // Quick logic to sum up total items
-                                var cart = Context.Session.GetJson<List<CartItem>>("Cart");
-                                var count = cart?.Sum(x => x.Quantity) ?? 0;
-                            }
-                            @if (count > 0)
-                            {
-                                <span class="badge rounded-pill bg-danger">@count</span>
-                            }
-                        </a>
-                    </li>
-                    @if (User.Identity!.IsAuthenticated)
-                    {
-                        <partial name="_LoginPartial" />
-                    }
-                    else
-                    {
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <button type="button" class="btn btn-outline-primary" style="margin-right: 1rem" data-bs-toggle="modal" data-bs-target="#loginModal">
-                                Login
+                            <a class="nav-link" asp-controller="Products" asp-action="Storefront">Shop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="About">About</a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav d-flex align-items-center">
+                        <li class="nav-item me-2">
+                            <button type="button" class="nav-link btn btn-link d-flex align-items-center border-0"
+                                    data-bs-toggle="modal" data-bs-target="#cartModal">
+                                <span class="material-symbols-rounded">shopping_cart</span>
+                                @if (count > 0)
+                                {
+                                    <span class="badge rounded-pill bg-danger ms-1" id="nav-cart-count">@count</span>
+                                }
                             </button>
                         </li>
-                    }
-                </ul>
-            </div>
 
+                        @if (User.Identity!.IsAuthenticated)
+                        {
+                            <partial name="_LoginPartial" />
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <button type="button" class="btn btn-outline-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                    Login
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
         </nav>
     </header>
     <div class="container">
@@ -106,6 +109,63 @@
             </div>
             <div class="modal-footer justify-content-center">
                 <p class="mb-0">New here? <a asp-area="Identity" asp-page="/Account/Register">Create an account</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-slideout">
+        @* Custom class for side-effect *@
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold" id="cartModalLabel">
+                    <span class="material-symbols-rounded align-middle me-1">shopping_bag</span>
+                    Your Cart
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="mini-cart-items" style="max-height: 60vh; overflow-y: auto;">
+                    @if (cart == null || !cart.Any())
+                    {
+                        <div class="text-center py-5">
+                            <span class="material-symbols-rounded text-muted" style="font-size: 48px;">shopping_cart_off</span>
+                            <p class="mt-2">Your cart is empty</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var item in cart)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <img src="@item.ImageUrl" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                        <div>
+                                            <div class="fw-bold text-truncate" style="max-width: 150px;">@item.ProductName</div>
+                                            <small class="text-muted">@item.Quantity x @item.Price.ToString("C")</small>
+                                        </div>
+                                    </div>
+                                    <span class="fw-bold text-primary">@item.Total.ToString("C")</span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer d-block bg-light">
+                @if (cart != null && cart.Any())
+                {
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="fw-bold">Subtotal:</span>
+                        <span class="fw-bold text-primary fs-5">@cart.Sum(x => x.Total).ToString("C")</span>
+                    </div>
+                }
+                <div class="d-grid gap-2">
+                    <a asp-controller="Cart" asp-action="Index" class="btn btn-primary fw-bold">Go To Cart Page</a>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>

@@ -25,5 +25,6 @@ function changeQty(productId, adjustment) {
                 const badge = document.querySelector('.navbar .badge');
                 if (badge) badge.innerText = data.itemCount;
             }
+            document.getElementById('nav-cart-count').innerText = data.itemCount;
         });
 } 
