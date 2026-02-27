@@ -36,17 +36,6 @@
                     </ul>
 
                     <ul class="navbar-nav d-flex align-items-center">
-                        <li class="nav-item me-2">
-                            <button type="button" class="nav-link btn btn-link d-flex align-items-center border-0"
-                                    data-bs-toggle="modal" data-bs-target="#cartModal">
-                                <span class="material-symbols-rounded">shopping_cart</span>
-                                @if (count > 0)
-                                {
-                                    <span class="badge rounded-pill bg-danger ms-1" id="nav-cart-count">@count</span>
-                                }
-                            </button>
-                        </li>
-
                         @if (User.Identity!.IsAuthenticated)
                         {
                             <partial name="_LoginPartial" />
@@ -59,6 +48,16 @@
                                 </button>
                             </li>
                         }
+                        <li class="nav-item me-2">
+                            <button type="button" class="nav-link btn btn-link d-flex align-items-center border-0"
+                                    data-bs-toggle="modal" data-bs-target="#cartModal">
+                                <span class="material-symbols-rounded">shopping_cart</span>
+                                @if (count > 0)
+                                {
+                                    <span class="badge rounded-pill bg-danger ms-1" id="nav-cart-count">@count</span>
+                                }
+                            </button>
+                        </li>
                     </ul>
                 </div>
             </div>
