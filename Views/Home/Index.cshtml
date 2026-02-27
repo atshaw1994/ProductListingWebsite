@@ -1,8 +1,32 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-5">
+            <article class="markdown-body">
+                @Html.Raw(ViewBag.ReadmeContent)
+            </article>
+        </div>
+    </div>
 </div>
+
+<style>
+    .markdown-body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+    }
+
+        .markdown-body h1, .markdown-body h2 {
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: .3em;
+            margin-top: 24px;
+        }
+
+        .markdown-body code {
+            background-color: rgba(27,31,35,.05);
+            padding: .2em .4em;
+            border-radius: 3px;
+        }
+</style>

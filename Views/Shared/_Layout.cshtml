@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using ProductListingWebsite.Helpers
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,6 +27,20 @@
                 </ul>
 
                 <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" asp-controller="Cart" asp-action="Index">
+                            <span class="material-symbols-rounded me-1">shopping_cart</span>
+                            @{
+                                // Quick logic to sum up total items
+                                var cart = Context.Session.GetJson<List<CartItem>>("Cart");
+                                var count = cart?.Sum(x => x.Quantity) ?? 0;
+                            }
+                            @if (count > 0)
+                            {
+                                <span class="badge rounded-pill bg-danger">@count</span>
+                            }
+                        </a>
+                    </li>
                     @if (User.Identity!.IsAuthenticated)
                     {
                         <partial name="_LoginPartial" />
@@ -40,6 +55,7 @@
                     }
                 </ul>
             </div>
+
         </nav>
     </header>
     <div class="container">
