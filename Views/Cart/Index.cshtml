@@ -36,23 +36,24 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr>
+                                <tr id="row-@item.ProductId">
                                     <td>
                                         <div class="d-flex align-items-center gap-3">
-                                            <img src="@item.ImageUrl" alt="@item.ProductName"
-                                                 class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                            <img src="@item.ImageUrl" class="rounded" style="width: 50px;">
                                             <span class="fw-bold">@item.ProductName</span>
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="badge bg-secondary p-2">@item.Quantity</div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <button class="btn btn-sm btn-outline-secondary px-2" onclick="changeQty(@item.ProductId, -1)">-</button>
+                                            <span id="qty-@item.ProductId" class="fw-bold px-2">@item.Quantity</span>
+                                            <button class="btn btn-sm btn-outline-secondary px-2" onclick="changeQty(@item.ProductId, 1)">+</button>
+                                        </div>
                                     </td>
                                     <td>@item.Price.ToString("C")</td>
-                                    <td class="text-end fw-bold">@item.Total.ToString("C")</td>
+                                    <td class="text-end fw-bold" id="total-@item.ProductId">@item.Total.ToString("C")</td>
                                     <td class="text-end">
-                                        <a asp-action="Remove" asp-route-id="@item.ProductId" class="text-danger">
-                                            <span class="material-symbols-rounded">delete</span>
-                                        </a>
+                                        <a asp-action="Remove" asp-route-id="@item.ProductId" class="text-danger"><span class="material-symbols-rounded">delete</span></a>
                                     </td>
                                 </tr>
                             }
