@@ -16,22 +16,27 @@ This project served as a Rosetta Stone for applying **Ruby on Rails** concepts t
 ### ✅ Accomplishments
 
 #### 1. Data Modeling & Persistence
-* Defined a `Product` **Model** with properties for `Name`, `Price`, and `ImageUrl`.
+* Defined a `Product` **Model** with properties for `Name`, `Price`, `ImageUrl`, and `StockQty`.
 * Configured the `ApplicationDbContext` to act as the gateway to the SQL Server database.
-* Managed the schema using **EF Core Migrations** to generate the database table.
+* Managed the schema using **EF Core Migrations** to generate and update database tables.
 
-#### 2. Automated Scaffolding
-* Utilized the ASP.NET Scaffolder to generate a **Controller** and **CRUD Views** (Create, Read, Update, Delete) based on the Product model.
+#### 2. Automated Scaffolding & Customization
+* Utilized the ASP.NET Scaffolder to generate a **Controller** and **CRUD Views**.
 * Resolved **Dependency Injection** errors by explicitly registering the DbContext in the application's builder services.
+* Overrode default scaffolding to implement custom admin logic for inventory management.
 
-#### 3. Routing & Navigation
-* Modified the **Shared Layout** (`_Layout.cshtml`) to include global navigation.
-* Implemented **Tag Helpers** to create dynamic links between the Home page and the Product Catalog.
-* Enhanced the landing page with a primary Call-to-Action (CTA) using Bootstrap styling.
+#### 3. Inventory & Stock Control
+* **Admin Restock Tools:** Created "One-Click" increment/decrement methods (`IncQty`/`DecQty`) to allow rapid stock updates from the product list.
+* **Conditional UI:** Developed logic to toggle "In Stock" vs. "Out of Stock" labels and disable purchase buttons dynamically when inventory hits zero.
 
-#### 4. Frontend Integration
-* Connected the UI to the backend logic to display a list of products dynamically from the database.
-* Utilized Razor syntax to inject C# data directly into HTML attributes.
+#### 4. Real-Time Shopping Cart
+* **Session-Based State:** Engineered a cart system using JSON-serialized Session storage to maintain user selections without requiring a persistent database login.
+* **Optimistic UI Updates:** Integrated **Vanilla JavaScript (AJAX)** to provide instant feedback on quantity changes in the mini-cart, reducing perceived latency.
+* **Sync Patterns:** Implemented a "Ghost Trigger" pattern to ensure global elements (navbar badges, sub-totals) stay synchronized with the server-side state.
+
+#### 5. Routing & Layout
+* Modified the **Shared Layout** (`_Layout.cshtml`) to include a persistent navigation bar and a dynamic mini-cart modal.
+* Utilized **Tag Helpers** to create type-safe links between the Storefront and Administrative views.
 
 ---
 
@@ -40,4 +45,5 @@ This project served as a Rosetta Stone for applying **Ruby on Rails** concepts t
 * **Framework:** ASP.NET Core 10.0 (MVC)
 * **ORM:** Entity Framework Core
 * **Database:** LocalDB / SQL Server
-* **Frontend:** Razor Pages, HTML5, Bootstrap 5
+* **Frontend:** Razor Pages (CSHTML), JavaScript (ES6+), Bootstrap 5, Material Symbols
+* **State Management:** ASP.NET Core Sessions & JSON Serialization
