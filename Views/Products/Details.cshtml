@@ -28,9 +28,18 @@
             <p class="card-text fs-5 fw-bold text-primary mb-0">
                 @Html.DisplayFor(model => model.Price)
             </p>
-            <small class="text-muted text-end">
-                In Stock: @Html.DisplayFor(model => model.StockQty)
-            </small>
+            @if (Model.StockQty > 0)
+            {
+                <small class="text-muted text-end">
+                    In Stock: @Html.DisplayFor(model => model.StockQty)
+                </small>
+            }
+            else
+            {
+                <small class="text-muted text-end">
+                    Out Of Stock!
+                </small>
+            }
         </div>
     </div>
 </div>
