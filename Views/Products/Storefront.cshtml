@@ -12,7 +12,7 @@
         <div class="col">
             @if (item.StockQty > 0)
             {
-                <div class="card h-100 shadow-sm border-0">
+                <div class="card h-100 shadow-sm border-secondary">
                     @if (!string.IsNullOrEmpty(item.ImageUrl))
                     {
                         <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name"
@@ -52,7 +52,7 @@
             }
             else
             {
-                <div class="card h-100 bg-secondary-subtle shadow-sm border-0">
+                <div class="card h-100 bg-secondary-subtle shadow-sm border-secondary-subtle">
                     @if (!string.IsNullOrEmpty(item.ImageUrl))
                     {
                         <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name"
