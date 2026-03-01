@@ -43,14 +43,19 @@
                         <span class="material-symbols-rounded text-danger">cancel</span>
                     }
                 </td>
-                <td class="align-middle text-center">
-                    <a asp-action="DecQty" asp-route-id="@item.Id" class="text-decoration-none text-dark">
-                        <span class="material-symbols-rounded">do_not_disturb_on</span>
-                    </a>
-                    @Html.DisplayFor(modelItem => item.StockQty)
-                    <a asp-action="IncQty" asp-route-id="@item.Id" class="text-decoration-none text-dark">
-                        <span class="material-symbols-rounded">add_circle</span>
-                    </a>
+                <td class="align-middle">
+                    <div class="d-flex align-items-center justify-content-center gap-2">
+                        @if (item.StockQty > 0)
+                        {
+                            <a asp-action="DecQty" asp-route-id="@item.Id" class="text-decoration-none text-dark d-inline-flex">
+                                <span class="material-symbols-rounded">do_not_disturb_on</span>
+                            </a>
+                        }
+                        <span class="fw-bold">@item.StockQty</span>
+                        <a asp-action="IncQty" asp-route-id="@item.Id" class="text-decoration-none text-dark d-inline-flex">
+                            <span class="material-symbols-rounded">add_circle</span>
+                        </a>
+                    </div>
                 </td>
                 <td class="align-middle">
                     <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none text-dark"><span class="material-symbols-rounded">edit</span></a>
