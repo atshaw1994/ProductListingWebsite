@@ -12,6 +12,9 @@ namespace ProductListingWebsite.Models
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
 
+        [Display(Name = "Qty")]
+        public int StockQty { get; set; }
+
         [Display(Name = "Image")]
         public string ImageUrl { get; set; } = string.Empty;
     }

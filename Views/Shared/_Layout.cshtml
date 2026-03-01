@@ -52,10 +52,10 @@
                             <button type="button" class="nav-link btn btn-link d-flex align-items-center border-0"
                                     data-bs-toggle="modal" data-bs-target="#cartModal">
                                 <span class="material-symbols-rounded">shopping_cart</span>
-                                @if (count > 0)
-                                {
-                                    <span class="badge rounded-pill bg-danger ms-1" id="nav-cart-count">@count</span>
-                                }
+                                <span class="badge rounded-pill bg-danger ms-1 @(count == 0 ? "d-none" : "")"
+                                      id="nav-cart-count">
+                                    @count
+                                </span>
                             </button>
                         </li>
                     </ul>
@@ -139,7 +139,7 @@
                             @foreach (var item in cart)
                             {
                                 <li class="list-group-item d-flex justify-content-between align-items-center py-3" id="mini-row-@item.ProductId">
-                                    <div class="d-flex align-items-center gap-3">
+                                    <div id="mini-row-@item.ProductId" class="d-flex align-items-center gap-3">
                                         <img src="@item.ImageUrl" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
                                         <div>
                                             <div class="fw-bold text-truncate" style="max-width: 120px;">@item.ProductName</div>
@@ -147,8 +147,8 @@
                                                 <button class="btn btn-xs btn-outline-secondary lh-1 p-1" onclick="changeQty(@item.ProductId, -1)">
                                                     <span class="material-symbols-rounded" style="font-size: 14px;">remove</span>
                                                 </button>
-                                                <small class="fw-bold"><span id="mini-qty-@item.ProductId">@item.Quantity</span></small>
-                                                <button class="btn btn-xs btn-outline-secondary lh-1 p-1" onclick="changeQty(@item.ProductId, 1)">
+                                                <small class="fw-bold"><span id="mini-qty-@item.ProductId" data-stock="@item.StockQty">@item.Quantity</span></small>
+                                                <button id="add-btn-@item.ProductId" class="btn btn-xs btn-outline-secondary lh-1 p-1" onclick="changeQty(@item.ProductId, 1)">
                                                     <span class="material-symbols-rounded" style="font-size: 14px;">add</span>
                                                 </button>
                                             </div>

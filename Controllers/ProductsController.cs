@@ -59,6 +59,35 @@ namespace ProductListingWebsite.Controllers
             return View("Index", products);
         }
 
+        // GET: Products/IncQty
+        public async Task<IActionResult> IncQty(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+
+            if (product != null)
+            {
+                product.StockQty++; // Always adds exactly ONE
+                _context.Update(product);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+        // GET: Products/AddQty
+        public async Task<IActionResult> DecQty(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+
+            if (product != null)
+            {
+                product.StockQty--; // Always removes exactly ONE
+                _context.Update(product);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

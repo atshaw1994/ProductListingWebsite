@@ -3,23 +3,50 @@
 
 // Write your JavaScript code.
 function changeQty(productId, adjustment) {
-    // Show the update button as soon as a change is made
-    const updateBtn = document.getElementById('update-cart-btn');
-    if (updateBtn) {
-        updateBtn.click();
-    }
+    const qtySpan = document.getElementById(`mini-qty-${productId}`);
+    const addBtn = document.getElementById(`add-btn-${productId}`);
+    const miniRow = document.getElementById(`mini-row-${productId}`);
+    
+    if (!qtySpan) return;
+
+    const currentQty = parseInt(qtySpan.innerText);
+    const stockLimit = parseInt(qtySpan.getAttribute('data-stock'));
+    const newQty = currentQty + adjustment;
+
+    if (adjustment > 0 && newQty > stockLimit) return;
+    if (adjustment < 0 && newQty < 0) return;
+
+    // 1. Instant local update for the number
+    qtySpan.innerText = newQty;
 
     fetch(`/Cart/UpdateQuantity?id=${productId}&adjustment=${adjustment}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        method: 'POST'
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update the UI numbers as we did before
-                updateUI(productId, adjustment, data);
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const navBadge = document.getElementById('nav-cart-count');
+            if (navBadge) {
+                // Update the number
+                navBadge.innerText = data.itemCount;
+
+                // Logic check: if 0, hide it. if > 0, show it.
+                if (data.itemCount > 0) {
+                    navBadge.classList.remove('d-none');
+                } else {
+                    navBadge.classList.add('d-none');
+                }
             }
-        });
+
+            // Handle the item row removal...
+            if (data.removed && miniRow) {
+                miniRow.remove();
+            }
+
+            // Final sync
+            document.getElementById('update-cart-btn')?.click();
+        }
+    });
 }
 
 function removeItem(productId) {

@@ -32,6 +32,7 @@ public class CartController : Controller
                 ProductName = product.Name,
                 Price = product.Price,
                 Quantity = 1,
+                StockQty = product.StockQty,
                 ImageUrl = product.ImageUrl
             });
         }
@@ -47,7 +48,7 @@ public class CartController : Controller
     [HttpPost]
     public IActionResult UpdateQuantity(int id, int adjustment)
     {
-        var cart = HttpContext.Session.GetJson<List<CartItem>>("Cart") ?? new List<CartItem>();
+        var cart = HttpContext.Session.GetJson<List<CartItem>>("Cart") ?? [];
         var item = cart.FirstOrDefault(x => x.ProductId == id);
 
         if (item != null)
