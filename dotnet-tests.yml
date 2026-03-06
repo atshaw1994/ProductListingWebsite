@@ -62,9 +62,10 @@ jobs:
       - name: Create product model test app
         shell: bash
         run: |
-          dotnet new console -n ProductModelTest -o ./ProductModelTest --framework net10.0
-          dotnet add ./ProductModelTest/ProductModelTest.csproj reference ./ProductListingWebsite.csproj
-          cat <<'EOF' > ./ProductModelTest/Program.cs
+          TEST_APP_DIR="$RUNNER_TEMP/ProductModelTest"
+          dotnet new console -n ProductModelTest -o "$TEST_APP_DIR" --framework net10.0
+          dotnet add "$TEST_APP_DIR/ProductModelTest.csproj" reference ./ProductListingWebsite.csproj
+          cat <<'EOF' > "$TEST_APP_DIR/Program.cs"
           using Microsoft.EntityFrameworkCore;
           using ProductListingWebsite.Data;
           using ProductListingWebsite.Models;
@@ -110,7 +111,7 @@ jobs:
           EOF
 
       - name: Run product model test
-        run: dotnet run --project ./ProductModelTest/ProductModelTest.csproj --configuration Release
+        run: dotnet run --project "$RUNNER_TEMP/ProductModelTest/ProductModelTest.csproj" --configuration Release
 
       - name: Start website
         shell: bash
