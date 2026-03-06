@@ -1,0 +1,142 @@
+name: .NET website tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: Your_password123!
+        ports:
+          - 1433:1433
+
+    env:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Server=127.0.0.1,1433;Database=ProductDb;User Id=sa;Password=Your_password123!;TrustServerCertificate=True;Encrypt=False
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore ProductListingWebsite.csproj
+
+      - name: Build application
+        run: dotnet build ProductListingWebsite.csproj --configuration Release --no-restore
+
+      - name: Install EF Core CLI
+        run: dotnet tool install --global dotnet-ef --version 10.*
+
+      - name: Wait for SQL Server
+        shell: bash
+        run: |
+          for i in {1..30}; do
+            if timeout 1 bash -c '</dev/tcp/127.0.0.1/1433' 2>/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "SQL Server did not start in time."
+          exit 1
+
+      - name: Apply database migrations
+        run: ~/.dotnet/tools/dotnet-ef database update --project ProductListingWebsite.csproj
+
+      - name: Create product model test app
+        shell: bash
+        run: |
+          dotnet new console -n ProductModelTest -o ./ProductModelTest --framework net10.0
+          dotnet add ./ProductModelTest/ProductModelTest.csproj reference ./ProductListingWebsite.csproj
+          cat <<'EOF' > ./ProductModelTest/Program.cs
+          using Microsoft.EntityFrameworkCore;
+          using ProductListingWebsite.Data;
+          using ProductListingWebsite.Models;
+
+          var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+
+          if (string.IsNullOrWhiteSpace(connectionString))
+          {
+              throw new InvalidOperationException("Connection string was not provided.");
+          }
+
+          var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+              .UseSqlServer(connectionString)
+              .Options;
+
+          using var db = new ApplicationDbContext(options);
+
+          const string productName = "GitHub Actions Test Product";
+
+          var existingProducts = db.Products.Where(p => p.Name == productName);
+          db.Products.RemoveRange(existingProducts);
+          await db.SaveChangesAsync();
+
+          var product = new Product
+          {
+              Name = productName,
+              Price = 19.99m,
+              StockQty = 5,
+              ImageUrl = "https://example.com/test-product.png"
+          };
+
+          db.Products.Add(product);
+          await db.SaveChangesAsync();
+
+          var savedProduct = await db.Products.SingleOrDefaultAsync(p => p.Name == productName);
+
+          if (savedProduct is null || savedProduct.Price != 19.99m || savedProduct.StockQty != 5)
+          {
+              throw new Exception("Product creation test failed.");
+          }
+
+          Console.WriteLine($"Created product with ID {savedProduct.Id}.");
+          EOF
+
+      - name: Run product model test
+        run: dotnet run --project ./ProductModelTest/ProductModelTest.csproj --configuration Release
+
+      - name: Start website
+        shell: bash
+        run: |
+          dotnet run --project ProductListingWebsite.csproj --configuration Release --no-build --urls http://127.0.0.1:5000 > app.log 2>&1 &
+
+      - name: Wait for website
+        shell: bash
+        run: |
+          for i in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:5000/ > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Website did not start in time."
+          cat app.log
+          exit 1
+
+      - name: Smoke test public pages
+        shell: bash
+        run: |
+          curl --fail --silent http://127.0.0.1:5000/ > /dev/null
+          curl --fail --silent http://127.0.0.1:5000/Home/About > /dev/null
+          curl --fail --silent http://127.0.0.1:5000/Products/Storefront | grep "GitHub Actions Test Product"
+
+      - name: Show website logs on failure
+        if: failure()
+        run: cat app.log
