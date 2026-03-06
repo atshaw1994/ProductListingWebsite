@@ -1,3 +1,6 @@
 <Solution>
+  <Folder Name="/.github/">
+    <File Path="dependabot.yml" />
+  </Folder>
   <Project Path="ProductListingWebsite.csproj" />
 </Solution>
