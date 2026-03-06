@@ -2,5 +2,8 @@
   <Folder Name="/.github/">
     <File Path="dependabot.yml" />
   </Folder>
+  <Folder Name="/.github/workflows/">
+    <File Path="dotnet-tests.yml" />
+  </Folder>
   <Project Path="ProductListingWebsite.csproj" />
 </Solution>
