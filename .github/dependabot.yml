@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    # Root directory of the project
+    directory: "/" 
+    schedule:
+      interval: "daily"
+    # Ensure it targets the .NET 10 bits specifically
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - ".net-10"
+
+  # Optional: Keep your GitHub Actions updated too
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
